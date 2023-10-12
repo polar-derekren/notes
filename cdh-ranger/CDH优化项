@@ -1,0 +1,126 @@
+HDFS优化：
+
+	key：dfs.namenode.ec.system.default.policy   
+	value：No Default Erasure Coding Policy.
+	
+	key：DataNode 的 Java 堆栈大小（字节）
+	value：根据数据量调节
+	
+	key：客户端 Java 堆大小（字节）
+	value：根据数据量调节
+	
+	key：core-site.xml 的群集范围高级配置代码段（安全阀）
+	value：
+	<property><name>hadoop.proxyuser.livy.groups</name><value>*</value></property><property><name>hadoop.proxyuser.livy.hosts</name><value>*</value></property><property><name>hadoop.http.staticuser.user</name><value>hdfs</value></property>
+		
+HIVE优化
+
+	key：YARN 服务上的 Spark
+	value：spark
+		
+	key：Kudu 服务
+	value：kudu
+		
+	key：Hive Metastore Server 的 Java 堆栈大小（字节）
+	value：根据数据量调节
+		
+	key：HiveServer2 的 Java 堆栈大小（字节）
+	value：根据数据量调节
+		
+	key：hive-site.xml 的 Hive 服务高级配置代码段（安全阀）
+	value：
+	<property><name>hive.support.quoted.identifiers</name><value>column</value></property><property><name>hive.metastore.dml.events</name><value>true</value></property><property><name>hive.vectorized.execution.enabled</name><value>true</value><description>Enables query vectorization.</description></property><property><name>hive.vectorized.input.format.excludes</name><value></value><description>Does not exclude query vectorization on any file format</description></property><property><name>hive.users.in.admin.role</name><value>root</value></property>
+		
+	key：hive-site.xml 的 Hive 复制高级配置代码段（安全阀）
+	value：
+	<property><name>hive.support.quoted.identifiers</name><value>column</value></property><property><name>hive.metastore.dml.events</name><value>true</value></property>
+	
+	key：hive-site.xml 的 Hive 客户端高级配置代码段（安全阀）
+	value：
+	<property><name>hive.support.quoted.identifiers</name><value>column</value></property><property><name>hive.metastore.dml.events</name><value>true</value></property>
+		
+	key：hive-site.xml 的 Hive Metastore Server 高级配置代码段（安全阀）
+	value：
+	<property><name>hive.support.quoted.identifiers</name><value>column</value></property><property><name>hive.metastore.dml.events</name><value>true</value></property><property><name>hive.metastore.alter.notifications.basic</name><value>false</value></property>
+		
+	key：Hive MetaStore 的最大消息大小
+hive.metastore.server.max.message.size
+	value：128mb
+
+IMPALA优化项		
+	key：Kudu 服务
+	value：kudu
+		
+	key：Impala Daemon 查询选项高级配置代码段（安全阀）
+	value：PARQUET_FALLBACK_SCHEMA_RESOLUTION=name
+
+		
+	key：Impala Daemon 内存限制      mem_limit
+	value：value：根据数据量调节
+		
+	key：Impala Daemon 的 Java 堆栈大小（字节）
+Impala Daemon JVM Heap
+	value：value：value：根据数据量调节
+
+		
+	key：Catalog Server 命令行参数高级配置代码段（安全阀）
+	value：--hms_event_polling_interval_s=2
+		
+	key：Impala Daemon 命令行参数高级配置代码段（安全阀）
+	value：-use_local_tz_for_unix_timestamp_conversions=true
+
+KAFKA优化		
+	key：Advertised Host
+advertised.host.name
+	value：各个实例配置对应的IP 192.168.1.122 为示例
+		
+	key：Additional Broker Java Options
+	value：各个实例配置对应的IP  192.168.1.122 为示例
+	-server -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:G1HeapRegionSize=16M -XX:MinMetaspaceFreeRatio=50 -XX:MaxMetaspaceFreeRatio=80 -XX:+DisableExplicitGC -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Dcom.sun.management.jmxremote.host=192.168.1.122 -Dcom.sun.management.jmxremote.local.only=true -Djava.rmi.server.hostname=192.168.1.122 
+
+		
+	key：kafka.properties 的 Kafka Broker 高级配置代码段（安全阀）
+	value：各个实例配置对应的IP  192.168.1.122 为示例
+	listeners=PLAINTEXT://0.0.0.0:9092,
+	advertised.listeners=PLAINTEXT://192.168.1.122:9092
+	
+KUDU优化	
+	key：gflagfile 的 Kudu 服务高级配置代码段（安全阀）
+	value：
+--trusted_subnets=0.0.0.0/0
+--rpc-authentication=disabled
+--rpc-encryption=disabled
+--heartbeat_interval_ms=3000
+--raft_heartbeat_interval_ms=3000
+		
+	key：gflagfile 的 Master 高级配置代码段（安全阀）
+	value：
+--trusted_subnets=0.0.0.0/0
+--rpc-authentication=disabled
+--rpc-encryption=disabled
+--heartbeat_interval_ms=3000
+--raft_heartbeat_interval_ms=3000
+--rpc_num_service_threads=20
+--rpc_service_queue_length=100	
+
+YARN优化	
+	key：容量调度程序配置高级配置代码段（安全阀）
+	value：
+<configuration><property><name>yarn.scheduler.capacity.root.queues</name><value>default</value></property><property><name>yarn.scheduler.capacity.root.capacity</name><value>100</value></property><property><name>yarn.scheduler.capacity.root.default.capacity</name><value>100</value></property></configuration>
+		
+	key：最大容器内存
+yarn.scheduler.maximum-allocation-mb
+	value：20G
+		
+	key：容器内存
+yarn.nodemanager.resource.memory-mb
+	value：按需分配
+
+		
+	key：容器虚拟 CPU 内核
+yarn.nodemanager.resource.cpu-vcores
+	value：按需分配
+		
+
+
+
